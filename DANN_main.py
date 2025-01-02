@@ -93,8 +93,8 @@ def evaluate_model_and_metrics(model, data_loader, scaler_labels):
     return mae, mse, r2, actuals, predictions
 
 # 加载数据集
-source_data_excel = pd.read_excel('D:\\data\\SD1.xlsx', header=None)
-target_data_excel = pd.read_excel('D:\\data\\TD1.xlsx', header=None)
+source_data
+target_data
 
 # 数据预处理
 scaler_features = MinMaxScaler()
@@ -107,7 +107,7 @@ y_target = scaler_labels.transform(target_data_excel.iloc[:, -1].values.reshape(
 
 # 合并源域和目标域数据
 X = np.concatenate((X_source, X_target))
-y = np.concatenate((y_source, y_target)).ravel()  # 将 y 转换为一维数组
+y = np.concatenate((y_source, y_target)).ravel()
 
 # 将连续标签转换为离散标签
 y_target_discrete = pd.cut(y_target.flatten(), bins=10, labels=False)
@@ -128,7 +128,7 @@ rf = RandomForestRegressor(random_state=42)
 
 # 使用网格搜索
 grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=3, n_jobs=-1, verbose=0)
-grid_search.fit(X, y)  # X 和 y 是你的数据集和标签
+grid_search.fit(X, y)  
 
 # 获取最佳参数
 best_params = grid_search.best_params_
@@ -183,13 +183,13 @@ for train_index, test_index in kf.split(X_target, y_target_discrete):
 
     criterion_regress = nn.MSELoss()
     criterion_domain = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)  # 增大学习率
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=500, gamma=0.1)  # 学习率调度器
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)  
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=500, gamma=0.1)  
 
-    # 在训练之前，添加一个损失列表
+    # 添加损失列表
     losses = []
 
-    epochs = 1000  # 增加训练轮数
+    epochs = 1000  
     for epoch in range(epochs):
         model.train()
         running_loss = 0.0
@@ -200,21 +200,21 @@ for train_index, test_index in kf.split(X_target, y_target_discrete):
             regress_loss = criterion_regress(predict, labels)
             domain_loss = criterion_domain(domain_predict, domains)
 
-            total_loss = regress_loss + 0.01 * domain_loss  # 调整正则化参数
+            total_loss = regress_loss + 0.01 * domain_loss  
             total_loss.backward()
             optimizer.step()
 
             running_loss += total_loss.item()
 
         losses.append(running_loss / len(train_loader))
-        fold_losses.append(running_loss / len(train_loader))  # 添加到每一折的损失记录
+        fold_losses.append(running_loss / len(train_loader))  
 
-        scheduler.step()  # 更新学习率
+        scheduler.step()  
 
         if epoch % 500 == 0:
             print(f'Epoch [{epoch + 1}/{epochs}], Loss: {running_loss / len(train_loader):.4f}')
 
-    # 训练完成后绘制损失曲线
+    # 
     plt.figure(figsize=(10, 5))
     plt.plot(range(epochs), losses, label='Training Loss')
     plt.xlabel('Epochs')
@@ -224,11 +224,9 @@ for train_index, test_index in kf.split(X_target, y_target_discrete):
     plt.grid(True)
     plt.show()
 
-    # 保存损失记录为Excel文件
     losses_df = pd.DataFrame({'Epoch': range(1, epochs + 1), 'Loss': losses})
 
-    # 确保 D 盘的目标路径存在
-    output_directory = 'D:\\data'
+    output_directory =
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
@@ -249,8 +247,6 @@ for train_index, test_index in kf.split(X_target, y_target_discrete):
         'Predicted': train_predictions
     })
 
-    # 保存到 Excel 文件
-    train_results.to_excel(f'D:\\train_results_fold_{fold}.xlsx', index=False)  # 保存训练集结果
 
     # 计算验证集评估指标
     test_mae, test_mse, test_r2, test_actuals, test_predictions = evaluate_model_and_metrics(model, test_loader, scaler_labels)
@@ -261,8 +257,5 @@ for train_index, test_index in kf.split(X_target, y_target_discrete):
         'Actual': test_actuals,
         'Predicted': test_predictions
     })
-
-    # 保存到 Excel 文件
-    test_results.to_excel(f"D:\\test_results_fold_{fold}.xlsx", index=False)  # 保存验证集结果
 
     fold += 1
