@@ -8,6 +8,7 @@ This repository contains the DANN  domain adaptation method  for milling deforma
 ## Data
 - Mock datasets are in the manuscript appendix.
 - Format: 4 columns (3 features + 1 label), 120 source, 60 target samples.
+- Example**: A sample row in `SD1.xlsx` might look like:0.2, 2000, 0.05, 0.12941  # [Feature1, Feature2, Feature3, Label]
 - Place files in `D:/data/` (or modify path in `dann.py`).
 
 ## Running
