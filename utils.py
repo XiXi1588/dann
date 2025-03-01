@@ -29,5 +29,3 @@ def evaluate_model_and_metrics(model, data_loader, scaler_labels):
 
     return mae, mse, r2, actuals, predictions
 
-
-tions
