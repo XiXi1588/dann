@@ -15,4 +15,4 @@ This repository contains the DANN  domain adaptation method  for milling deforma
 - Outputs saved to `D:/data/`.
 
 ## Requirements
-- Hardware: Intel Core i5-9400 CPU, 8 GB RAM, no GPU.
+- Hardware: Intel Core i5-9400 CPU, 8 GB RAM.
